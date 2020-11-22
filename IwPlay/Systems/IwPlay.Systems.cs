@@ -493,6 +493,7 @@ namespace IwPlay.Systems
             {
                 get
                 {
+                    /*
                     // Define cliente
                     var cli = new NameValueCollection
                     {
@@ -501,6 +502,15 @@ namespace IwPlay.Systems
 
                     // Adquire informações
                     string GameList = Encoding.UTF8.GetString(_PostClient.POST("/games/games.list", cli));
+                    */
+                    // Criar dados para envio
+                    var Dados = new Dictionary<string, string>
+                    {
+                        ["sid"] = UserInfo.SessionID
+                    };
+
+                    // Adquire informações
+                    string GameList = _PostClient.RESTPOST("/games/games.list", Dados);
 
                     // Se o retorno não for NOK, continuar
                     if (GameList != "NOK")
@@ -693,6 +703,7 @@ namespace IwPlay.Systems
             {
                 try
                 {
+                    /*
                     // Criar protocolo de dados
                     var dados = new NameValueCollection
                     {
@@ -705,6 +716,19 @@ namespace IwPlay.Systems
                     // Encaminhar e receber respostas
                     var resp = _PostClient.POST("/users/users.wallet", dados);
                     string upl_resp = Encoding.UTF8.GetString(resp);
+                    */
+
+                    // Criar dados para envio
+                    var dados = new Dictionary<string, string>
+                    {
+                        ["u"] = Username, // Nome do usuário
+                        ["sid"] = SessionID, // Código de sessão IwPlay
+                        ["command"] = "POST", // Comando para INSERIR dados
+                        ["draw"] = valor.ToString() // Valor para ser removido
+                    };
+
+                    // Enviar dados
+                    string upl_resp = _PostClient.RESTPOST("/users/users.wallet", dados);
 
                     // Adquirir valor recebido
                     if (upl_resp == "NOFUND")
@@ -736,6 +760,7 @@ namespace IwPlay.Systems
             {
                 try
                 {
+                    /*
                     // Definir dados para envio
                     var dados = new NameValueCollection
                     {
@@ -747,6 +772,18 @@ namespace IwPlay.Systems
                     // Adquire informações
                     var GameList = _PostClient.POST("/games/games.check", dados);
                     string gList = Encoding.UTF8.GetString(GameList);
+                    */
+
+                    // Criar dados para envio
+                    var dados = new Dictionary<string, string>
+                    {
+                        ["u"] = Username,
+                        ["gamecode"] = gc,
+                        ["sid"] = SessionID
+                    };
+
+                    // Adquire retorno
+                    string gList = _PostClient.RESTPOST("/games/games.check", dados);
 
                     // Adquire retornos
                     if (gList == "IWP_OK")
@@ -858,14 +895,15 @@ namespace IwPlay.Systems
                     try
                     {
                         // Criar dados para envio
-                        var dados = new NameValueCollection
+                        var dados = new Dictionary<string, string>
                         {
                             ["u"] = UserInfo.Username,
                             ["sid"] = UserInfo.SessionID
                         };
 
                         // Postar dados e adquirir retorno      
-                        string ret = Encoding.UTF8.GetString(_PostClient.POST("/dev/dev.retrieveusercompany", dados));
+                        string ret = _PostClient.RESTPOST("/dev/dev.retrieveusercompany", dados);
+
                         // Verifica se há valores
                         if (ret != "[]")
                         {
@@ -902,14 +940,15 @@ namespace IwPlay.Systems
                 try
                 {
                     // Criar dados para envio
-                    var dados = new NameValueCollection
+                    var dados = new Dictionary<string, string>
                     {
                         ["company"] = DevName,
                         ["sid"] = UserInfo.SessionID
                     };
 
                     // Postar dados e adquirir retorno      
-                    string ret = Encoding.UTF8.GetString(_PostClient.POST("/dev/dev.retrievecompany", dados));
+                    string ret = _PostClient.RESTPOST("/dev/dev.retrievecompany", dados);
+
                     // Verifica se há valores
                     if (ret != "[]")
                     {
@@ -947,7 +986,7 @@ namespace IwPlay.Systems
                 try
                 {
                     // Criar dados para upload
-                    var dados = new NameValueCollection
+                    var dados = new Dictionary<string, string>
                     {
                         ["sid"] = UserInfo.SessionID,
                         ["developer"] = DeveloperName,
@@ -956,11 +995,8 @@ namespace IwPlay.Systems
                         ["value"] = value
                     };
 
-                    // Enviar dados
-                    var rest = _PostClient.POST("/games/games.up.developer", dados);
-
-                    // Adquirir dados
-                    string feedback = Encoding.UTF8.GetString(rest);
+                    // Enviar e adquirir dados 
+                    var feedback = _PostClient.RESTPOST("/games/games.up.developer", dados);
 
                     // Verificar se o retorno é IWP_OK
                     if (feedback == "IWP_OK")
@@ -989,14 +1025,14 @@ namespace IwPlay.Systems
                 try
                 {
                     // Define cliente
-                    var cli = new NameValueCollection
+                    var cli = new Dictionary<string, string>
                     {
                         ["sid"] = UserInfo.SessionID,
                         ["gamecode"] = gameCode
                     };
 
                     // Adquire informações
-                    string GameList = Encoding.UTF8.GetString(_PostClient.POST("/games/games.detail", cli));
+                    string GameList = _PostClient.RESTPOST("/games/games.detail", cli);
 
                     // Se o retorno não for NOK, continuar
                     if (GameList != "NOK")

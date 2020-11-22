@@ -89,20 +89,19 @@
             // Filter
             // 
             this.Filter.BackColor = System.Drawing.Color.White;
-            this.Filter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.Filter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Filter.Font = new System.Drawing.Font("Segoe UI Light", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Filter.ForeColor = System.Drawing.Color.Black;
             this.Filter.FormattingEnabled = true;
             this.Filter.Items.AddRange(new object[] {
             "ITEMS THAT I BOUGHT",
-            "MY PUBLISHED GAMES",
-            "MY HIDDEN GAMES",
-            "ALL MY DEV. GAMES",
+            "MY PUBLISHED ITEMS",
+            "ITEMS THAT IS PENDING APPROVAL",
+            "ALL MY DEV. ITEMS",
             "ALL GAMES"});
             this.Filter.Location = new System.Drawing.Point(66, 4);
             this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(212, 34);
+            this.Filter.Size = new System.Drawing.Size(365, 33);
             this.Filter.TabIndex = 1;
             this.Filter.SelectedIndexChanged += new System.EventHandler(this.Filter_SelectedIndexChanged);
             // 

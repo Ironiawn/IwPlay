@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.Label CurrentPaymentLinkLabel;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostSelf_GameEditor));
+            System.Windows.Forms.Label GameImageLabel;
             this.Developer = new System.Windows.Forms.Label();
             this.GameName = new System.Windows.Forms.Label();
             this.GameImage = new System.Windows.Forms.PictureBox();
@@ -39,7 +40,9 @@
             this.CheckFreeGame = new System.Windows.Forms.CheckBox();
             this.CurrentPaymentLinkInput = new System.Windows.Forms.TextBox();
             this.EditorHandler = new System.Windows.Forms.Panel();
+            this.GameImageLink = new System.Windows.Forms.TextBox();
             CurrentPaymentLinkLabel = new System.Windows.Forms.Label();
+            GameImageLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.GameImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -101,7 +104,7 @@
             this.CurrentGamePriceInput.MaxLength = 20;
             this.CurrentGamePriceInput.Name = "CurrentGamePriceInput";
             this.CurrentGamePriceInput.Size = new System.Drawing.Size(76, 29);
-            this.CurrentGamePriceInput.TabIndex = 20;
+            this.CurrentGamePriceInput.TabIndex = 2;
             this.CurrentGamePriceInput.Text = "9,90";
             this.CurrentGamePriceInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.CurrentGamePriceInput.TextChanged += new System.EventHandler(this.CurrentGamePriceInput_TextChanged);
@@ -123,7 +126,7 @@
             this.UpdateGame.Location = new System.Drawing.Point(688, 4);
             this.UpdateGame.Name = "UpdateGame";
             this.UpdateGame.Size = new System.Drawing.Size(170, 55);
-            this.UpdateGame.TabIndex = 21;
+            this.UpdateGame.TabIndex = 5;
             this.UpdateGame.Text = "Update\r\nGame Information";
             this.UpdateGame.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.UpdateGame.UseVisualStyleBackColor = false;
@@ -137,7 +140,7 @@
             this.CheckFreeGame.Location = new System.Drawing.Point(94, 501);
             this.CheckFreeGame.Name = "CheckFreeGame";
             this.CheckFreeGame.Size = new System.Drawing.Size(98, 25);
-            this.CheckFreeGame.TabIndex = 22;
+            this.CheckFreeGame.TabIndex = 3;
             this.CheckFreeGame.Text = "Free Game";
             this.CheckFreeGame.UseVisualStyleBackColor = true;
             this.CheckFreeGame.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CheckFreeGame_MouseClick);
@@ -147,10 +150,10 @@
             this.CurrentPaymentLinkInput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.CurrentPaymentLinkInput.Font = new System.Drawing.Font("Segoe UI Light", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurrentPaymentLinkInput.Location = new System.Drawing.Point(12, 441);
-            this.CurrentPaymentLinkInput.MaxLength = 20;
+            this.CurrentPaymentLinkInput.MaxLength = 1500;
             this.CurrentPaymentLinkInput.Name = "CurrentPaymentLinkInput";
             this.CurrentPaymentLinkInput.Size = new System.Drawing.Size(220, 29);
-            this.CurrentPaymentLinkInput.TabIndex = 24;
+            this.CurrentPaymentLinkInput.TabIndex = 1;
             this.CurrentPaymentLinkInput.Text = "-";
             this.CurrentPaymentLinkInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.CurrentPaymentLinkInput.TextChanged += new System.EventHandler(this.CurrentPaymentLinkInput_TextChanged);
@@ -160,13 +163,38 @@
             this.EditorHandler.Location = new System.Drawing.Point(243, 65);
             this.EditorHandler.Name = "EditorHandler";
             this.EditorHandler.Size = new System.Drawing.Size(615, 492);
-            this.EditorHandler.TabIndex = 25;
+            this.EditorHandler.TabIndex = 4;
+            // 
+            // GameImageLink
+            // 
+            this.GameImageLink.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.GameImageLink.Font = new System.Drawing.Font("Segoe UI Light", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GameImageLink.Location = new System.Drawing.Point(12, 349);
+            this.GameImageLink.MaxLength = 1500;
+            this.GameImageLink.Name = "GameImageLink";
+            this.GameImageLink.Size = new System.Drawing.Size(220, 29);
+            this.GameImageLink.TabIndex = 24;
+            this.GameImageLink.Text = "-";
+            this.GameImageLink.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.GameImageLink.TextChanged += new System.EventHandler(this.GameImageLink_TextChanged);
+            // 
+            // GameImageLabel
+            // 
+            GameImageLabel.AutoSize = true;
+            GameImageLabel.Font = new System.Drawing.Font("Segoe UI Light", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            GameImageLabel.Location = new System.Drawing.Point(7, 316);
+            GameImageLabel.Name = "GameImageLabel";
+            GameImageLabel.Size = new System.Drawing.Size(166, 30);
+            GameImageLabel.TabIndex = 25;
+            GameImageLabel.Text = "Game Image Link";
             // 
             // HostSelf_GameEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(862, 569);
+            this.Controls.Add(this.GameImageLink);
+            this.Controls.Add(GameImageLabel);
             this.Controls.Add(this.EditorHandler);
             this.Controls.Add(this.CurrentPaymentLinkInput);
             this.Controls.Add(CurrentPaymentLinkLabel);
@@ -202,5 +230,6 @@
         private System.Windows.Forms.CheckBox CheckFreeGame;
         private System.Windows.Forms.TextBox CurrentPaymentLinkInput;
         private System.Windows.Forms.Panel EditorHandler;
+        private System.Windows.Forms.TextBox GameImageLink;
     }
 }

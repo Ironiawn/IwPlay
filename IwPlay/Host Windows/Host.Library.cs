@@ -44,6 +44,9 @@ namespace IwPlay.Hosts
 
             // Desabilitar visualização do Flow
             Flow.Visible = false;
+
+            // Desabilitar filtro
+            Filter.Enabled = false;
         }
 
         private void LibraryWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -112,7 +115,7 @@ namespace IwPlay.Hosts
                         Flow.Controls.Add(s);
                     }
                 }else
-                    if(ApplyFilterIndex == "MY PUBLISHED GAMES")
+                    if(ApplyFilterIndex == "MY PUBLISHED ITEMS")
                 {
                     if (s.IsTheDev && s.Approved)
                     {
@@ -120,7 +123,7 @@ namespace IwPlay.Hosts
                         Flow.Controls.Add(s);
                     }
                 }else
-                    if(ApplyFilterIndex == "MY HIDDEN GAMES")
+                    if(ApplyFilterIndex == "ITEMS THAT IS PENDING APPROVAL")
                 {
                     if (s.IsTheDev && !s.Approved)
                     {
@@ -129,7 +132,7 @@ namespace IwPlay.Hosts
                     }
                 }
                 else
-                    if(ApplyFilterIndex == "ALL MY DEV. GAMES")
+                    if(ApplyFilterIndex == "ALL MY DEV. ITEMS")
                 {
                     if (s.IsTheDev)
                     {
@@ -138,6 +141,9 @@ namespace IwPlay.Hosts
                     }
                 }
             }
+
+            // Habilitar filtro
+            Filter.Enabled = true;
 
             // Habilitar visualização do Flow
             Flow.Visible = true;
@@ -167,6 +173,9 @@ namespace IwPlay.Hosts
             lbLoading.Enabled = true;
             pbLoading.Visible = true;
             pbLoading.Enabled = true;
+
+            // Desabilitar filtro
+            Filter.Enabled = false;
 
             // Desabilitar visualização do Flow
             Flow.Visible = false;

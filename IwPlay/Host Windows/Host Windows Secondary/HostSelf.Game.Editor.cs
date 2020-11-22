@@ -73,34 +73,11 @@ namespace IwPlay.Hosts.Secondary
 
         private void UpdateGamePriceButton_Click(object sender, EventArgs e)
         {
-            // Verifica se o preço foi alterado
-            if (GamePrice != CurrentGamePriceInput.Text)
-            {
-                // Tentar dar parse no texto de preço
-                try
-                {
-                    // Verifica se o indicador de gratuidade está checado
-                    if (!CheckFreeGame.Checked)
-                    {
-                        double p = double.Parse(CurrentGamePriceInput.Text);
-                    }
-
-                    // Tentar atualizar informação de preço do jogo
-                    if (!GameDatabase.UpdateInfo("GAMEPRICE", CurrentGamePriceInput.Text == "FREE" ? "0" : CurrentGamePriceInput.Text, GameCode, GameDeveloper))
-                    {
-                        // Mostrar uma mensagem de atualização não efetuada!
-                        MessageBox.Show("Error while updating your game price!\nPlease try again.", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch
-                {
-                    // Preço inválido!
-                    MessageBox.Show("The new price is invalid, please check and try again!", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-            }
+            // Indicador de revisão
+            bool PendingApproval = false;
 
             // Verifica se a descrição do jogo foi alterada
-            if(HTMLEditor.BodyHTML != GameDescription)
+            if (HTMLEditor.BodyHTML != GameDescription)
             {
                 // Remover qualquer tag html da descrição para nova atualização no elemento de página
                 string NewHTML = HTMLEditor.BodyHTML;
@@ -115,9 +92,81 @@ namespace IwPlay.Hosts.Secondary
                 }
             }
 
+            // Verifica se a imagem do jogo foi alterada
+            if (GameImageLink.Text.Trim() != BoxShot)
+            { 
+                // Tentar atualizar informação de preço do jogo
+                if (!GameDatabase.UpdateInfo("GAMEIMAGE", GameImageLink.Text.Trim(), GameCode, GameDeveloper))
+                {
+                    // Mostrar uma mensagem de atualização não efetuada!
+                    MessageBox.Show("Error while updating your game image link!\nPlease try again.", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            // Verifica se o link foi alterado
+            if (GameBuyLink != CurrentPaymentLinkInput.Text.Trim())
+            {
+                // Tentar atualizar informação de link de pagamento do jogo
+                if (!GameDatabase.UpdateInfo("GAMEBUYID", CurrentPaymentLinkInput.Text.Trim(), GameCode, GameDeveloper))
+                {
+                    // Mostrar uma mensagem de atualização não efetuada!
+                    MessageBox.Show("Error while updating your game payment link!\nPlease try again.", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                    // O jogo estará pendente aprovação IwPlay
+                    PendingApproval = true;
+            }
+
+            // Verifica se o preço foi alterado
+            if (GamePrice != CurrentGamePriceInput.Text.Trim())
+            {
+                // Tentar dar parse no texto de preço
+                try
+                {
+                    // Verifica se o indicador de gratuidade está checado
+                    if (!CheckFreeGame.Checked)
+                    {
+                        double p = double.Parse(CurrentGamePriceInput.Text.Trim());
+                    }
+
+                    // Tentar atualizar informação de preço do jogo
+                    if (!GameDatabase.UpdateInfo("GAMEPRICE", CurrentGamePriceInput.Text == "FREE" ? "0" : CurrentGamePriceInput.Text.Trim(), GameCode, GameDeveloper))
+                    {
+                        // Mostrar uma mensagem de atualização não efetuada!
+                        MessageBox.Show("Error while updating your game price!\nPlease try again.", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                        // O jogo estará pendente aprovação IwPlay
+                        PendingApproval = true;
+                }
+                catch
+                {
+                    // Preço inválido!
+                    MessageBox.Show("The new price is invalid, please check and try again!", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+
+
+            /*
             // Exibe mensagem de atualizado
             MessageBox.Show("Game updated!\nINSTRUCTIONS\n\n# Now the game will be reviewed by us and can be available again up to 3 business days, ok? #\n\n- Updated the price? The payment link must be updated too.\n- Updated the payment link? Same for above, but for price." +
                 "\n- Updated description? IwPlay removes href links, be aware!", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
+            */
+
+            // Criar janela de mensagem customizada
+            IwP_CustomMessage ICM = new IwP_CustomMessage
+            {
+                // Carregar imagem
+                _Image = PendingApproval? Image.FromFile(@"brw\submit_approval.brw") : Image.FromFile(@"brw\positive.brw"),
+                _Title = PendingApproval ? "SENT TO REVIEW": "GAME UPDATED",
+                _Description = PendingApproval? "The game has been submited to\nreview. We'll notify you on your\ne-mail!\n\nGame is now hidden from public." : "The game has been updated and\nis currently visible for public!"
+            };
+
+            // Exibir janela customizada
+            ICM.ShowDialog();
+
+            // Resultado OK
             DialogResult = DialogResult.OK;
         }
 
@@ -134,6 +183,7 @@ namespace IwPlay.Hosts.Secondary
 
             // Carregar imagem do jogo
             GameImage.Load(BoxShot);
+            GameImageLink.Text = BoxShot;
 
             // Carregar descrição do jogo no editor de HTML
             HTMLEditor.InsertHtml(GameDescription);
@@ -226,6 +276,12 @@ namespace IwPlay.Hosts.Secondary
         }
 
         private void CurrentPaymentLinkInput_TextChanged(object sender, EventArgs e)
+        {
+            // Habilitar botão de atualização
+            UpdateGame.Enabled = true;
+        }
+
+        private void GameImageLink_TextChanged(object sender, EventArgs e)
         {
             // Habilitar botão de atualização
             UpdateGame.Enabled = true;
