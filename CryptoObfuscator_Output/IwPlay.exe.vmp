@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Document Version="2">
+    <Protection InputFileName="IwPlay.exe" Options="852680">
+        <Messages />
+        <Folders />
+        <Procedures>
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/Connection::LoginUser(string, string)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/Connection::CreateUser(string, string, string)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/UserInfo::.cctor()" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/UserInfo::get_Userdata()" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/UserInfo::AdquireInfo(string)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/UserInfo::get_Wallet()" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/UserInfo::CompraItem(float64)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Security/CustomMenuHandler::.ctor()" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Security/CustomMenuHandler::OnBeforeContextMenu(class CefSharp.IWebBrowser, class CefSharp.IBrowser, class CefSharp.IFrame, class CefSharp.IContextMenuParams, class CefSharp.IMenuModel)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Security/CustomMenuHandler::OnContextMenuCommand(class CefSharp.IWebBrowser, class CefSharp.IBrowser, class CefSharp.IFrame, class CefSharp.IContextMenuParams, valuetype CefSharp.CefMenuCommand, valuetype CefSharp.CefEventFlags)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Security/CustomMenuHandler::OnContextMenuDismissed(class CefSharp.IWebBrowser, class CefSharp.IBrowser, class CefSharp.IFrame)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Security/CustomMenuHandler::RunContextMenu(class CefSharp.IWebBrowser, class CefSharp.IBrowser, class CefSharp.IFrame, class CefSharp.IContextMenuParams, class CefSharp.IMenuModel, class CefSharp.IRunContextMenuCallback)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Security/&#x15;::.ctor()" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Security/&#x15;::&#x19;()" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/Connection::get_Games()" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/UserInfo::AtualizaInfo(string, string, string)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/UserInfo::HasGame(string)" Options="0" />
+            <Procedure MapAddress="IwPlay.Systems.IwP_Main_Database/DevInfo::UpdateInfo(string, string, string)" Options="0" />
+        </Procedures>
+        <Objects />
+    </Protection>
+    <DLLBox>
+        <Folders />
+    </DLLBox>
+    <Script />
+    <LicenseManager />
+</Document>
