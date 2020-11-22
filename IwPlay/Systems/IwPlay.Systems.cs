@@ -419,6 +419,7 @@ namespace IwPlay.Systems
             {
                 try
                 {
+                    /*
                     // Criar dados para envio
                     var dados = new NameValueCollection
                     {
@@ -431,6 +432,19 @@ namespace IwPlay.Systems
 
                     // Criar string de retorno
                     string ret = Encoding.UTF8.GetString(upl);
+                    */
+
+                    // Criar dados para envio
+                    var data = new Dictionary<string, string>
+                    {
+                        ["u"] = username,
+                        ["p"] = password,
+                        ["e"] = email
+                    };
+
+                    // Enviar dados
+                    string ret = _PostClient.RESTPOST("/users/users.create", data); 
+
 
                     // Separar códigos de retorno
                     switch (ret)
