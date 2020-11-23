@@ -77,6 +77,9 @@ namespace IwPlay
             };
             BrowserHost.Controls.Add(Browser);
 
+            // Desabilitar menu de contexto
+            Browser.MenuHandler = new Systems.IwP_Main_Security.CustomMenuHandler();
+
             // Atualiza informações do jogo
             UpdateGameInfo();
         }

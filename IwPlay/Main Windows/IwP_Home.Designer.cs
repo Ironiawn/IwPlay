@@ -80,7 +80,7 @@
             this.btnHome.Name = "btnHome";
             this.btnHome.Size = new System.Drawing.Size(170, 55);
             this.btnHome.TabIndex = 11;
-            this.btnHome.Text = "IwPlay Shop";
+            this.btnHome.Text = "IwPlay";
             this.btnHome.UseVisualStyleBackColor = false;
             this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
             // 
@@ -115,7 +115,7 @@
             this.btnUserLibrary.Name = "btnUserLibrary";
             this.btnUserLibrary.Size = new System.Drawing.Size(170, 55);
             this.btnUserLibrary.TabIndex = 15;
-            this.btnUserLibrary.Text = "IwPlay Library";
+            this.btnUserLibrary.Text = "Library";
             this.btnUserLibrary.UseVisualStyleBackColor = false;
             this.btnUserLibrary.Click += new System.EventHandler(this.btnUserLibrary_Click);
             // 

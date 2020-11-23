@@ -1063,6 +1063,90 @@ namespace IwPlay.Systems
 
     }
 
+    public static class AppActions
+    {
+        public class GameConfig
+        {
+            [JsonPropertyName("AppTitle")]
+            public string Title;
+            [JsonPropertyName("AppDeveloper")]
+            public string Developer;
+            [JsonPropertyName("AppId")]
+            public string GameCode;
+            [JsonPropertyName("Files")]
+            public string GameFiles;
+        }
+
+        public static bool RunGame(string gameCode)
+        {
+            // Verificar se o usuário possui o jogo
+            if (IwP_Main_Database.UserInfo.HasGame(gameCode))
+            {
+                // Adquirir JSON de configuração do jogo
+
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static void CreateGameConfig(string GameCode)
+        {
+            // Exibir pasta de arquivo
+            FolderBrowserDialog FolderBrowser = new FolderBrowserDialog();
+            FolderBrowser.Description = "Select your game files folder";
+            FolderBrowser.ShowNewFolderButton = false;
+
+            if(FolderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                // Lista para handler de arquivos                
+                List<string> Files = new List<string>();
+                foreach (string s in Directory.GetFiles(FolderBrowser.SelectedPath, "*.*", SearchOption.AllDirectories)) Files.Add(s);
+
+                // Converter lista em JSON
+                string FJS = JsonSerializer.Serialize(Files);
+
+                // Criar detalhes do jogo
+                var Details = new Dictionary<string, string>
+                {
+                    ["AppTitle"] = "Teste",
+                    ["AppDeveloper"] = "Teste S.A",
+                    ["AppId"] = "IWP_0001",
+                    ["Files"] = FJS
+                };
+
+                // Converter em JSON
+                string DetailsJS = JsonSerializer.Serialize(Details);
+
+                // Escrever em txt
+                File.WriteAllText(Environment.CurrentDirectory + "\\teste.txt", DetailsJS, Encoding.UTF8);
+            }
+        }
+
+        public static void ReadGameConfig()
+        {
+            // Caminho do arquivo de configuração do jogo
+            string FilePath = Environment.CurrentDirectory + "\\teste.txt";
+            // Leitura do arquivo
+            string FileText = File.ReadAllText(FilePath);
+            // Criar opção de Json
+            var options = new JsonSerializerOptions()
+            {
+                IncludeFields = true,
+            };
+            /// Deserializar arquivo JSON do arquivo
+            GameConfig GameSetup = JsonSerializer.Deserialize<GameConfig>(FileText, options);
+            // Adquirir arquivos do jogo
+            List<string> GameFiles = JsonSerializer.Deserialize<List<string>>(GameSetup.GameFiles);
+
+            foreach(string s in GameFiles)
+            MessageBox.Show($"Title: {GameSetup.Title}\nFiles: {s}");
+        }
+    }
+
     /// <summary>
     /// Funções para criação de log
     /// </summary>
