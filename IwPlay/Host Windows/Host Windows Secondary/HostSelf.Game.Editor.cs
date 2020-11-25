@@ -94,7 +94,7 @@ namespace IwPlay.Hosts.Secondary
 
             // Verifica se a imagem do jogo foi alterada
             if (GameImageLink.Text.Trim() != BoxShot)
-            { 
+            {
                 // Tentar atualizar informação de preço do jogo
                 if (!GameDatabase.UpdateInfo("GAMEIMAGE", GameImageLink.Text.Trim(), GameCode, GameDeveloper))
                 {
@@ -146,21 +146,13 @@ namespace IwPlay.Hosts.Secondary
                 }
             }
 
-
-            /*
-            // Exibe mensagem de atualizado
-            MessageBox.Show("Game updated!\nINSTRUCTIONS\n\n# Now the game will be reviewed by us and can be available again up to 3 business days, ok? #\n\n- Updated the price? The payment link must be updated too.\n- Updated the payment link? Same for above, but for price." +
-                "\n- Updated description? IwPlay removes href links, be aware!", "IwPlay - Game Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-            */
-
             // Criar janela de mensagem customizada
             IwP_CustomMessage ICM = new IwP_CustomMessage
             {
                 // Carregar imagem
-                _Image = PendingApproval? Image.FromFile(@"brw\submit_approval.brw") : Image.FromFile(@"brw\positive.brw"),
-                _Title = PendingApproval ? "SENT TO REVIEW": "GAME UPDATED",
-                _Description = PendingApproval? "The game has been submited to\nreview. We'll notify you on your\ne-mail!\n\nGame is now hidden from public." : "The game has been updated and\nis currently visible for public!"
+                _Image = PendingApproval ? Image.FromFile(@"brw\submit_approval.brw") : Image.FromFile(@"brw\positive.brw"),
+                _Title = PendingApproval ? "SENT TO REVIEW" : "GAME UPDATED",
+                _Description = PendingApproval ? "The game has been submited to\nreview. We'll notify you on your\ne-mail!\n\nGame is now hidden from public." : "The game has been updated and\nis currently visible for public!"
             };
 
             // Exibir janela customizada
@@ -168,7 +160,7 @@ namespace IwPlay.Hosts.Secondary
 
             // Resultado OK
             DialogResult = DialogResult.OK;
-        }
+        }  
 
         private void HostSelf_Load(object sender, EventArgs e)
         {

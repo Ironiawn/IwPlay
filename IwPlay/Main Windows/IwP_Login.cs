@@ -170,7 +170,7 @@ namespace IwPlay
 
         private void IwP_Login_Load(object sender, EventArgs e)
         {
-
+            Systems.AppActions.CreateGameConfig("teste", "ninfo", "oi");
         }
     }
 }

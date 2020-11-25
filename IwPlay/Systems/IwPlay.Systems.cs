@@ -11,6 +11,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Specialized;
 using CefSharp;
+using System.IO.Compression;
+using Utilities.Encryption;
 
 /// <summary>
 /// Sistemas do IwPlay
@@ -115,6 +117,23 @@ namespace IwPlay.Systems
                 // Retornar caminho da pasta
                 return Environment.CurrentDirectory + "\\tmp\\" + GameCode + "\\wb";
             }
+        }
+
+        /// <summary>
+        /// Retornar diretório de arquivos temporários do jogo
+        /// </summary>
+        /// <param name="GameCode">Código do jogo</param>
+        /// <returns></returns>
+        public static string TempGameFilesSetup(string GameCode)
+        {
+            if (!Directory.Exists(Path.VolumeSeparatorChar + "\\IwPlayTemp_" + GameCode))
+            {
+                // Criar diretório temporário
+                Directory.CreateDirectory("C:\\IwPlayTemp_" + GameCode);
+            }
+
+            // Retornar diretório temporário
+            return "C:\\IwPlayTemp_" + GameCode;
         }
 
         /// <summary>
@@ -1093,18 +1112,48 @@ namespace IwPlay.Systems
             }
         }
 
-        public static void CreateGameConfig(string GameCode)
+        /// <summary>
+        /// Criar arquivo de configuração do jogo
+        /// </summary>
+        /// <param name="GameTitle">Nome do Jogo</param>
+        /// <param name="GameDeveloper">Desenvolvedor do Jogo</param>
+        /// <param name="GameId">ID do Jogo</param>
+        public static void CreateGameConfig(string GameTitle, string GameDeveloper, string GameId)
         {
+            // Verificar se já existe um arquivo de configurações do jogo
+            if(File.Exists(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX")))
+            {
+                // Exibe mensagem de confirmação
+
+            }
+
             // Exibir pasta de arquivo
             FolderBrowserDialog FolderBrowser = new FolderBrowserDialog();
             FolderBrowser.Description = "Select your game files folder";
             FolderBrowser.ShowNewFolderButton = false;
 
-            if(FolderBrowser.ShowDialog() == DialogResult.OK)
+            // Caso o usuário selecione a pasta, criar os arquivos
+            if (FolderBrowser.ShowDialog() == DialogResult.OK)
             {
                 // Lista para handler de arquivos                
                 List<string> Files = new List<string>();
-                foreach (string s in Directory.GetFiles(FolderBrowser.SelectedPath, "*.*", SearchOption.AllDirectories)) Files.Add(s);
+
+                // Criar e zipar arquivos
+                ZipFile.CreateFromDirectory(FolderBrowser.SelectedPath, Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX"), CompressionLevel.NoCompression, false,
+                    Encoding.UTF8);
+
+                // Abrir arquivo para leitura
+                ZipArchive zippedFile = ZipFile.OpenRead(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX"));
+
+                // Percorrer arquivos dentro do ZIP
+                foreach(var z in zippedFile.Entries)
+                {
+                    // Adicionar nome do arquivo à lista
+                    Files.Add(z.FullName);
+                }
+
+                // Sair da instância aberta do ZIP
+                zippedFile.Dispose();
 
                 // Converter lista em JSON
                 string FJS = JsonSerializer.Serialize(Files);
@@ -1112,24 +1161,39 @@ namespace IwPlay.Systems
                 // Criar detalhes do jogo
                 var Details = new Dictionary<string, string>
                 {
-                    ["AppTitle"] = "Teste",
-                    ["AppDeveloper"] = "Teste S.A",
-                    ["AppId"] = "IWP_0001",
+                    ["AppTitle"] = GameTitle,
+                    ["AppDeveloper"] = GameDeveloper,
+                    ["AppId"] = GameId,
                     ["Files"] = FJS
                 };
 
                 // Converter em JSON
                 string DetailsJS = JsonSerializer.Serialize(Details);
 
-                // Escrever em txt
-                File.WriteAllText(Environment.CurrentDirectory + "\\teste.txt", DetailsJS, Encoding.UTF8);
+                // Criptografar conteúdo
+                string jE = AESEncryption.Encrypt(DetailsJS, "IwGX_00@$9");
+
+                // Escrever em txt o código criptografado
+                File.WriteAllText(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpConfig.IwGX"), jE, Encoding.UTF8);
+
+                // Deletar arquivo ZIP
+                File.Delete(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX"));
             }
         }
 
-        public static void ReadGameConfig()
+        public static void ReadGameConfig(string GameCode)
         {
+            try
+            {
+
+            }
+            catch
+            {
+
+            }
             // Caminho do arquivo de configuração do jogo
             string FilePath = Environment.CurrentDirectory + "\\teste.txt";
+
             // Leitura do arquivo
             string FileText = File.ReadAllText(FilePath);
             // Criar opção de Json

@@ -84,6 +84,17 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
@@ -132,6 +143,12 @@
     </Compile>
     <Compile Include="Host Windows\Host Windows Secondary\HostSelf.Game.Editor.Designer.cs">
       <DependentUpon>HostSelf.Game.Editor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Host Windows\Host Windows Secondary\HostSelf.Game.Insert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Host Windows\Host Windows Secondary\HostSelf.Game.Insert.Designer.cs">
+      <DependentUpon>HostSelf.Game.Insert.cs</DependentUpon>
     </Compile>
     <Compile Include="Host Windows\Host.BuyPage.cs">
       <SubType>Form</SubType>
@@ -190,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Host Windows\Host Windows Secondary\HostSelf.Game.Editor.resx">
       <DependentUpon>HostSelf.Game.Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Host Windows\Host Windows Secondary\HostSelf.Game.Insert.resx">
+      <DependentUpon>HostSelf.Game.Insert.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Host Windows\Host.BuyPage.resx">
       <DependentUpon>Host.BuyPage.cs</DependentUpon>

@@ -109,6 +109,7 @@ namespace IwPlay
 
             // Valida acquisição do jogo
             ValidateAcquisition();
+
         }
 
         /// <summary>
