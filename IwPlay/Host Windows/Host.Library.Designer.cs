@@ -35,6 +35,7 @@
             this.pbLoading = new System.Windows.Forms.PictureBox();
             this.lbLoading = new System.Windows.Forms.Label();
             this.Filter = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
             FilterLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).BeginInit();
             this.SuspendLayout();
@@ -105,11 +106,22 @@
             this.Filter.TabIndex = 1;
             this.Filter.SelectedIndexChanged += new System.EventHandler(this.Filter_SelectedIndexChanged);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(970, 10);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // HostLibrary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.Filter);
             this.Controls.Add(FilterLabel);
             this.Controls.Add(this.lbLoading);
@@ -131,5 +143,6 @@
         private System.Windows.Forms.PictureBox pbLoading;
         private System.Windows.Forms.Label lbLoading;
         private System.Windows.Forms.ComboBox Filter;
+        private System.Windows.Forms.Button button1;
     }
 }

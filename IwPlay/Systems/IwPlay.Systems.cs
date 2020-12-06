@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 using System.Collections.Specialized;
 using CefSharp;
 using System.IO.Compression;
-using Utilities.Encryption;
+
 
 /// <summary>
 /// Sistemas do IwPlay
@@ -375,13 +375,13 @@ namespace IwPlay.Systems
                     var data = new Dictionary<string, string>
                     {
                         ["u"] = username, // Nome do usuário
-                        ["p"] = password, // Senha do usuário
+                        ["p"] = Hashing.Encrypt(password), // Senha do usuário
                         ["sid"] = UserInfo.SessionID, // Sessão criada para a utilização da IwPlay
                         ["i"] = UserInfo.Userdata // Dados de localização do usuário
                     };
 
                     // Adquirir retorno
-                    string ret = _PostClient.RESTPOST("/users/users.verify", data);
+                    string ret = Hashing.Decrypt(_PostClient.RESTPOST("/users/users.verify", data));
 
                     // Separar códigos de retorno
                     switch (ret)
@@ -389,7 +389,7 @@ namespace IwPlay.Systems
                         // Geralmente outro erro!
                         default:
                             // Criar log de retorno
-                            LogClient.Log(ret);
+                            LogClient.Log("*RET.ERROR*\n\n" + ret);
                             return RetCodes.ERROR;
                         case "BANNED":
                             // Usuário banido!
@@ -457,13 +457,12 @@ namespace IwPlay.Systems
                     var data = new Dictionary<string, string>
                     {
                         ["u"] = username,
-                        ["p"] = password,
+                        ["p"] = Hashing.Encrypt(password),
                         ["e"] = email
                     };
 
                     // Enviar dados
-                    string ret = _PostClient.RESTPOST("/users/users.create", data); 
-
+                    string ret = Hashing.Decrypt(_PostClient.RESTPOST("/users/users.create", data));
 
                     // Separar códigos de retorno
                     switch (ret)
@@ -512,42 +511,49 @@ namespace IwPlay.Systems
             {
                 get
                 {
-                    /*
-                    // Define cliente
-                    var cli = new NameValueCollection
+                    // Verificar se a hold de jogos não é nula
+                    if (_Games != null)
+                        return _Games;
+                    else
                     {
-                        ["sid"] = UserInfo.SessionID
-                    };
+                        // Criar lista de holder
+                        _Games = new List<GameInformation>();
 
-                    // Adquire informações
-                    string GameList = Encoding.UTF8.GetString(_PostClient.POST("/games/games.list", cli));
-                    */
-                    // Criar dados para envio
-                    var Dados = new Dictionary<string, string>
-                    {
-                        ["sid"] = UserInfo.SessionID
-                    };
-
-                    // Adquire informações
-                    string GameList = _PostClient.RESTPOST("/games/games.list", Dados);
-
-                    // Se o retorno não for NOK, continuar
-                    if (GameList != "NOK")
-                    {
-                        // Criar opção de Json
-                        var options = new JsonSerializerOptions()
+                        // Criar dados para envio
+                        var Dados = new Dictionary<string, string>
                         {
-                            IncludeFields = true,
+                            ["sid"] = UserInfo.SessionID
                         };
 
-                        // Lista de jogos
-                        return JsonSerializer.Deserialize<List<GameInformation>>(GameList, options);
+                        // Adquire informações
+                        string GameList = Hashing.Decrypt(_PostClient.RESTPOST("/games/games.list", Dados));
+
+                        // Se o retorno não for NOK, continuar
+                        if (GameList != "NOK")
+                        {
+                            // Criar opção de Json
+                            var options = new JsonSerializerOptions()
+                            {
+                                IncludeFields = true,
+                            };
+
+                            // Adicionar lista à holder
+                            _Games = JsonSerializer.Deserialize<List<GameInformation>>(GameList, options);
+
+                            // Lista de jogos
+                            return JsonSerializer.Deserialize<List<GameInformation>>(GameList, options);
+                        }
+                        else
+                            // Retornar nulo
+                            return null;
                     }
-                    else
-                        // Retornar nulo
-                        return null;
                 }
-            }            
+            }
+
+            /// <summary>
+            /// Hold dos jogos disponíveis na Store
+            /// </summary>
+            public static List<GameInformation> _Games = null;
         }
 
         /// <summary>
@@ -610,10 +616,10 @@ namespace IwPlay.Systems
                         {
                             ["u"] = Username, // Nome do usuário
                             ["sid"] = SessionID, // Código de sessão IwPlay
-                            ["command"] = "GET" // Comando para ADQUIRIR dados
+                            ["command"] = Hashing.Encrypt("GET") // Comando para ADQUIRIR dados
                         };
 
-                        return _PostClient.RESTPOST("/users/users.wallet", dados);
+                        return Hashing.Decrypt(_PostClient.RESTPOST("/users/users.wallet", dados));
                     }
                     else
                     {
@@ -635,16 +641,18 @@ namespace IwPlay.Systems
                         {
                             ["u"] = Username, // Nome do usuário
                             ["sid"] = SessionID, // Código de sessão IwPlay
-                            ["c"] = columnName // Coluna requisitada
+                            ["c"] = Hashing.Encrypt(columnName) // Coluna requisitada
                         };
 
-                        return _PostClient.RESTPOST("/users/users.check", dados);
+                        string ret = _PostClient.RESTPOST("/users/users.check", dados);
+
+                        return Hashing.Decrypt(ret);
                     }
                 }
                 catch (Exception ex)
                 {
                     // Log file
-                    LogClient.Log(ex.Message);
+                    LogClient.Log(ex.Message + "\n" + ex.StackTrace + "\n" + ex.InnerException);
 
                     // Retornar nulo, coluna incorreta e/ou inexistente
                     return "iw_false";
@@ -670,7 +678,7 @@ namespace IwPlay.Systems
                 try
                 {
                     // Criar dados para atualização
-                    var dados = new NameValueCollection
+                    var dados = new Dictionary<string, string>
                     {
                         ["u"] = Username, // Nome do usuário
                         ["sid"] = SessionID, // Código da sessão IwPlay
@@ -678,14 +686,12 @@ namespace IwPlay.Systems
                         ["value"] = valor, // Valor para ser atualizado
                         ["newpw"] = novaSenha // Nova senha caso necessite de atualização
                     };
-                    // Enviar dados para o servidor
-                    var upd = _PostClient.POST("/users/users.up", dados);
 
-                    // Adquirir resposta
-                    string resp = Encoding.UTF8.GetString(upd);
+                    // Enviar dados para o servidor e adquirir resposta
+                    var upd = _PostClient.RESTPOST("/users/users.up", dados);
 
                     // Verifica resposta
-                    return resp;
+                    return upd;
                 }
                 catch (Exception ex)
                 {
@@ -802,7 +808,7 @@ namespace IwPlay.Systems
                     };
 
                     // Adquire retorno
-                    string gList = _PostClient.RESTPOST("/games/games.check", dados);
+                    string gList = Hashing.Decrypt(_PostClient.RESTPOST("/games/games.check", dados));
 
                     // Adquire retornos
                     if (gList == "IWP_OK")
@@ -834,7 +840,7 @@ namespace IwPlay.Systems
                     };
 
                     // Enviar dados
-                    var resp = _PostClient.POST("/users/users.logout", dados);
+                    _PostClient.POST("/users/users.logout", dados);
                 }
                 finally
                 {
@@ -921,7 +927,7 @@ namespace IwPlay.Systems
                         };
 
                         // Postar dados e adquirir retorno      
-                        string ret = _PostClient.RESTPOST("/dev/dev.retrieveusercompany", dados);
+                        string ret = Hashing.Decrypt(_PostClient.RESTPOST("/dev/dev.retrieveusercompany", dados));
 
                         // Verifica se há valores
                         if (ret != "[]")
@@ -966,7 +972,7 @@ namespace IwPlay.Systems
                     };
 
                     // Postar dados e adquirir retorno      
-                    string ret = _PostClient.RESTPOST("/dev/dev.retrievecompany", dados);
+                    string ret = Hashing.Decrypt(_PostClient.RESTPOST("/dev/dev.retrievecompany", dados));
 
                     // Verifica se há valores
                     if (ret != "[]")
@@ -1015,7 +1021,7 @@ namespace IwPlay.Systems
                     };
 
                     // Enviar e adquirir dados 
-                    var feedback = _PostClient.RESTPOST("/games/games.up.developer", dados);
+                    var feedback = Hashing.Decrypt(_PostClient.RESTPOST("/games/games.up.developer", dados));
 
                     // Verificar se o retorno é IWP_OK
                     if (feedback == "IWP_OK")
@@ -1051,7 +1057,8 @@ namespace IwPlay.Systems
                     };
 
                     // Adquire informações
-                    string GameList = _PostClient.RESTPOST("/games/games.detail", cli);
+                    string GameList = Hashing.Decrypt
+                        (_PostClient.RESTPOST("/games/games.detail", cli));
 
                     // Se o retorno não for NOK, continuar
                     if (GameList != "NOK")
@@ -1080,6 +1087,48 @@ namespace IwPlay.Systems
             }
         }
 
+    }
+
+    /// <summary>
+    /// Funções globais do sistema
+    /// </summary>
+    public static class Functions
+    {
+
+        /// <summary>
+        /// Exibe mensagem customizada
+        /// </summary>
+        /// <param name="Titulo">Título da mensagem</param>
+        /// <param name="Mensagem">Descrição da mensagem</param>
+        /// <param name="ImagemDescritiva">Imagem da mensagem</param>
+        /// <param name="Dialogo">Será ShowDialog()?</param>
+        /// <param name="TextoBotao">Texto do botão de ação</param>
+        /// <param name="Evento">Evento do botão de ação</param>
+        public static DialogResult ExibeMensagem(string Titulo, string Mensagem, string ImagemDescritiva, bool Dialogo = false, string TextoBotao = null, EventHandler Evento = null)
+        {
+            // Criar instância do diálogo
+            IwP_CustomMessage IPCM = new IwP_CustomMessage()
+            {
+                _Title = Titulo,
+                _Description = Mensagem,
+                _Image = System.Drawing.Image.FromFile(ImagemDescritiva),
+                ButtonMessage = TextoBotao,
+                CallFor = Evento
+            };
+
+            // Exibe mensagem
+            if (Dialogo)
+            { 
+                // Exibe fora de método de diálogo
+                IPCM.Show();
+
+                // Retornar ignore
+                return DialogResult.Ignore;
+            }
+            else
+                // Exibe o diálogo e espera o retorno
+                return IPCM.ShowDialog();
+        }
     }
 
     public static class AppActions
@@ -1118,13 +1167,23 @@ namespace IwPlay.Systems
         /// <param name="GameTitle">Nome do Jogo</param>
         /// <param name="GameDeveloper">Desenvolvedor do Jogo</param>
         /// <param name="GameId">ID do Jogo</param>
-        public static void CreateGameConfig(string GameTitle, string GameDeveloper, string GameId)
+        public static bool InsertNewGame(GameInformation Game)
         {
             // Verificar se já existe um arquivo de configurações do jogo
-            if(File.Exists(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX")))
+            if(File.Exists(Path.Combine(Directories.TempGameFilesSetup(Game.ID), "tmpFile.IwGX")))
             {
                 // Exibe mensagem de confirmação
+                IwP_CustomMessage IPCM = new IwP_CustomMessage()
+                {
+                    _Title = "CFG OVERWRITE",
+                    _Description = "An game config already exists!\nDo you want to overwrite it?",
+                    ButtonMessage = "OVERWRITE",
+                    CallFor = null
+                };
 
+                // Verifica se o usuário clicou em Overwrite
+                if (IPCM.ShowDialog() != DialogResult.OK)
+                    return false;
             }
 
             // Exibir pasta de arquivo
@@ -1139,11 +1198,11 @@ namespace IwPlay.Systems
                 List<string> Files = new List<string>();
 
                 // Criar e zipar arquivos
-                ZipFile.CreateFromDirectory(FolderBrowser.SelectedPath, Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX"), CompressionLevel.NoCompression, false,
+                ZipFile.CreateFromDirectory(FolderBrowser.SelectedPath, Path.Combine(Directories.TempGameFilesSetup(Game.ID), "tmpFile.IwGX"), CompressionLevel.NoCompression, false,
                     Encoding.UTF8);
 
                 // Abrir arquivo para leitura
-                ZipArchive zippedFile = ZipFile.OpenRead(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX"));
+                ZipArchive zippedFile = ZipFile.OpenRead(Path.Combine(Directories.TempGameFilesSetup(Game.ID), "tmpFile.IwGX"));
 
                 // Percorrer arquivos dentro do ZIP
                 foreach(var z in zippedFile.Entries)
@@ -1161,36 +1220,59 @@ namespace IwPlay.Systems
                 // Criar detalhes do jogo
                 var Details = new Dictionary<string, string>
                 {
-                    ["AppTitle"] = GameTitle,
-                    ["AppDeveloper"] = GameDeveloper,
-                    ["AppId"] = GameId,
+                    ["AppTitle"] = Game.Name,
+                    ["AppDeveloper"] = Game.Developer,
+                    ["AppId"] = Game.ID,
+                    ["AppImage"] = Game.Image,
                     ["Files"] = FJS
                 };
 
                 // Converter em JSON
                 string DetailsJS = JsonSerializer.Serialize(Details);
 
-                // Criptografar conteúdo
-                string jE = AESEncryption.Encrypt(DetailsJS, "IwGX_00@$9");
+                // Tentar inserir o jogo na base de dados
+                try
+                {
+                    // Criar dados de postagem
 
-                // Escrever em txt o código criptografado
-                File.WriteAllText(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpConfig.IwGX"), jE, Encoding.UTF8);
+                    // Postar no servidor
 
-                // Deletar arquivo ZIP
-                File.Delete(Path.Combine(Directories.TempGameFilesSetup(GameId), "tmpFile.IwGX"));
+                    // Verificar retorno
+                    if (Hashing.Decrypt(new PostClient().RESTPOST("/games/games.branch", new Dictionary<string, string>
+                    {
+                        ["sid"] = IwP_Main_Database.UserInfo.SessionID,
+                        ["gamecode"] = Game.ID,
+                        ["username"] = IwP_Main_Database.UserInfo.Username,
+                        ["company"] = Game.Developer,
+                        ["setup"] = DetailsJS,
+                        ["query"] = Hashing.Encrypt("INSERT")
+                    })) == "INS_OK")
+                        return true;
+                    else
+                        return false;
+                }
+                catch (Exception ex)
+                {
+                    // Log file
+                    LogClient.Log(ex.Message);
+
+                    // Retornar falso por padrão
+                    return false;
+                }
+                finally
+                {
+                    // Verificar se pasta temporária do jogo existe
+                    if (Directory.Exists(Directories.TempGameFilesSetup(Game.ID)))
+                        Directory.Delete(Directories.TempGameFilesSetup(Game.ID), true);
+                }
             }
+
+            // Retornar falso por padrão
+            return false;
         }
 
         public static void ReadGameConfig(string GameCode)
         {
-            try
-            {
-
-            }
-            catch
-            {
-
-            }
             // Caminho do arquivo de configuração do jogo
             string FilePath = Environment.CurrentDirectory + "\\teste.txt";
 

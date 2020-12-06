@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 using GameDatabase = IwPlay.Systems.IwP_Main_Database.DevInfo;
-using BaiqiSoft.HtmlEditorControl;
-
+using DG.MiniHTMLTextBox;
 
 namespace IwPlay.Hosts.Secondary
 {
@@ -34,11 +31,6 @@ namespace IwPlay.Hosts.Secondary
         /// Nome do jogo
         /// </summary>
         public string _GameName = string.Empty;
-
-        /// <summary>
-        /// Editor HTML
-        /// </summary>
-        MstHtmlEditor HTMLEditor = new MstHtmlEditor();
 
         /// <summary>
         /// Desenvolvedor do jogo
@@ -77,10 +69,10 @@ namespace IwPlay.Hosts.Secondary
             bool PendingApproval = false;
 
             // Verifica se a descrição do jogo foi alterada
-            if (HTMLEditor.BodyHTML != GameDescription)
+            if (HTMLEditor.Text != GameDescription)
             {
                 // Remover qualquer tag html da descrição para nova atualização no elemento de página
-                string NewHTML = HTMLEditor.BodyHTML;
+                string NewHTML = HTMLEditor.Text;
                 NewHTML = NewHTML.Replace("<html>", "");
                 NewHTML = NewHTML.Replace("</html>", "");
 
@@ -164,9 +156,6 @@ namespace IwPlay.Hosts.Secondary
 
         private void HostSelf_Load(object sender, EventArgs e)
         {
-            // Criar editor HTML
-            EditorHandler.Controls.Add(HTMLEditor);
-
             // Carregar nome do jogo
             GameName.Text = _GameName;
 
@@ -178,12 +167,10 @@ namespace IwPlay.Hosts.Secondary
             GameImageLink.Text = BoxShot;
 
             // Carregar descrição do jogo no editor de HTML
-            HTMLEditor.InsertHtml(GameDescription);
-            HTMLEditor.Dock = DockStyle.Fill;
-            HTMLEditor.HtmlChanged += CurrentGamePriceInput_TextChanged;
+            HTMLEditor.Text = GameDescription;
 
             // Atualizar descrição interna do jogo com o bodyHTML
-            GameDescription = HTMLEditor.BodyHTML;
+            GameDescription = HTMLEditor.Text;
 
             // Carregar preço do jogo
             CurrentGamePriceInput.Text = GamePrice;

@@ -105,12 +105,16 @@ namespace IwPlay
 
             // Criar timer para adquirir dados do servidor em tempo real
             Timer UpdateStatus = new Timer();
-            UpdateStatus.Interval = 2000;
+            UpdateStatus.Interval = 15000;
             UpdateStatus.Tick += UpdateStatus_Tick;
             UpdateStatus.Start();
 
             // Novo setor
             UpdateSector(Setores.Shop);
+
+
+            Hosts.Secondary.HostSelf_GameEditor_Insert GEDI = new Hosts.Secondary.HostSelf_GameEditor_Insert();
+            GEDI.Show();
         }
 
         private void UpdateStatus_Tick(object sender, EventArgs e)

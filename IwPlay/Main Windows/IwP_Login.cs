@@ -170,7 +170,17 @@ namespace IwPlay
 
         private void IwP_Login_Load(object sender, EventArgs e)
         {
-            Systems.AppActions.CreateGameConfig("teste", "ninfo", "oi");
+            /*
+            Systems.GameInformation GI = new Systems.GameInformation()
+            {
+                Name = "AMNESIA: A MACHINE FOR PIGS",
+                Developer = "FRICTIONAL GAMES",
+                Image = "https://s.glbimg.com/po/tt/f/original/2013/09/12/amnesia01.jpg",
+                ID = "IWP_0004"
+            };
+            if (Systems.AppActions.InsertNewGame(GI))
+                MessageBox.Show("OK");
+            */
         }
     }
 }

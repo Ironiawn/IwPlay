@@ -34,12 +34,8 @@ namespace IwPlay.Hosts.Secondary
             System.Windows.Forms.Label GameNameLabel;
             System.Windows.Forms.Label DeveloperLabel;
             System.Windows.Forms.Label GameDescriptionLabel;
-            System.Windows.Forms.GroupBox SetupIndex;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostSelf_GameEditor_Insert));
-            this.FilesInfo = new System.Windows.Forms.Label();
-            this.SearchFilesButton = new System.Windows.Forms.Button();
             this.GameImageLink = new System.Windows.Forms.TextBox();
-            this.EditorHandler = new System.Windows.Forms.Panel();
             this.CurrentPaymentLinkInput = new System.Windows.Forms.TextBox();
             this.CheckFreeGame = new System.Windows.Forms.CheckBox();
             this.CurrentGamePriceInput = new System.Windows.Forms.TextBox();
@@ -48,13 +44,13 @@ namespace IwPlay.Hosts.Secondary
             this.GameNameInput = new System.Windows.Forms.TextBox();
             this.DeveloperFilter = new System.Windows.Forms.ComboBox();
             this.InsertGame = new System.Windows.Forms.Button();
+            this.UpdateLinks = new System.Windows.Forms.Button();
+            this.HTMLEditor = new DG.MiniHTMLTextBox.MiniHTMLTextBox();
             GameImageLabel = new System.Windows.Forms.Label();
             CurrentPaymentLinkLabel = new System.Windows.Forms.Label();
             GameNameLabel = new System.Windows.Forms.Label();
             DeveloperLabel = new System.Windows.Forms.Label();
             GameDescriptionLabel = new System.Windows.Forms.Label();
-            SetupIndex = new System.Windows.Forms.GroupBox();
-            SetupIndex.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GameImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,9 +90,9 @@ namespace IwPlay.Hosts.Secondary
             DeveloperLabel.Font = new System.Drawing.Font("Segoe UI Light", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             DeveloperLabel.Location = new System.Drawing.Point(484, 9);
             DeveloperLabel.Name = "DeveloperLabel";
-            DeveloperLabel.Size = new System.Drawing.Size(105, 30);
+            DeveloperLabel.Size = new System.Drawing.Size(178, 30);
             DeveloperLabel.TabIndex = 38;
-            DeveloperLabel.Text = "Developer";
+            DeveloperLabel.Text = "Select a Developer";
             // 
             // GameDescriptionLabel
             // 
@@ -107,38 +103,6 @@ namespace IwPlay.Hosts.Secondary
             GameDescriptionLabel.Size = new System.Drawing.Size(169, 30);
             GameDescriptionLabel.TabIndex = 40;
             GameDescriptionLabel.Text = "Game Description";
-            // 
-            // SetupIndex
-            // 
-            SetupIndex.Controls.Add(this.FilesInfo);
-            SetupIndex.Controls.Add(this.SearchFilesButton);
-            SetupIndex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            SetupIndex.Font = new System.Drawing.Font("Segoe UI Light", 15.75F);
-            SetupIndex.Location = new System.Drawing.Point(768, 106);
-            SetupIndex.Name = "SetupIndex";
-            SetupIndex.Size = new System.Drawing.Size(200, 195);
-            SetupIndex.TabIndex = 42;
-            SetupIndex.TabStop = false;
-            SetupIndex.Text = "Game Files";
-            // 
-            // FilesInfo
-            // 
-            this.FilesInfo.AutoSize = true;
-            this.FilesInfo.Location = new System.Drawing.Point(7, 82);
-            this.FilesInfo.Name = "FilesInfo";
-            this.FilesInfo.Size = new System.Drawing.Size(158, 30);
-            this.FilesInfo.TabIndex = 1;
-            this.FilesInfo.Text = "Waiting for files..";
-            // 
-            // SearchFilesButton
-            // 
-            this.SearchFilesButton.Location = new System.Drawing.Point(6, 34);
-            this.SearchFilesButton.Name = "SearchFilesButton";
-            this.SearchFilesButton.Size = new System.Drawing.Size(188, 41);
-            this.SearchFilesButton.TabIndex = 0;
-            this.SearchFilesButton.Text = "SETUP FILES";
-            this.SearchFilesButton.UseVisualStyleBackColor = true;
-            this.SearchFilesButton.Click += new System.EventHandler(this.SearchFilesButton_Click);
             // 
             // GameImageLink
             // 
@@ -151,13 +115,6 @@ namespace IwPlay.Hosts.Secondary
             this.GameImageLink.TabIndex = 2;
             this.GameImageLink.Text = "-";
             this.GameImageLink.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // EditorHandler
-            // 
-            this.EditorHandler.Location = new System.Drawing.Point(245, 106);
-            this.EditorHandler.Name = "EditorHandler";
-            this.EditorHandler.Size = new System.Drawing.Size(515, 463);
-            this.EditorHandler.TabIndex = 6;
             // 
             // CurrentPaymentLinkInput
             // 
@@ -182,6 +139,7 @@ namespace IwPlay.Hosts.Secondary
             this.CheckFreeGame.TabIndex = 5;
             this.CheckFreeGame.Text = "Free Game";
             this.CheckFreeGame.UseVisualStyleBackColor = true;
+            this.CheckFreeGame.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CheckFreeGame_MouseClick);
             // 
             // CurrentGamePriceInput
             // 
@@ -234,12 +192,6 @@ namespace IwPlay.Hosts.Secondary
             this.DeveloperFilter.ForeColor = System.Drawing.Color.Black;
             this.DeveloperFilter.FormattingEnabled = true;
             this.DeveloperFilter.ItemHeight = 25;
-            this.DeveloperFilter.Items.AddRange(new object[] {
-            "ITEMS THAT I BOUGHT",
-            "MY PUBLISHED ITEMS",
-            "ITEMS THAT IS PENDING APPROVAL",
-            "ALL MY DEV. ITEMS",
-            "ALL GAMES"});
             this.DeveloperFilter.Location = new System.Drawing.Point(489, 38);
             this.DeveloperFilter.Name = "DeveloperFilter";
             this.DeveloperFilter.Size = new System.Drawing.Size(271, 33);
@@ -249,7 +201,6 @@ namespace IwPlay.Hosts.Secondary
             // 
             this.InsertGame.BackColor = System.Drawing.Color.Blue;
             this.InsertGame.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.InsertGame.Enabled = false;
             this.InsertGame.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.InsertGame.FlatAppearance.BorderSize = 3;
             this.InsertGame.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
@@ -259,20 +210,58 @@ namespace IwPlay.Hosts.Secondary
             this.InsertGame.ForeColor = System.Drawing.Color.White;
             this.InsertGame.Image = ((System.Drawing.Image)(resources.GetObject("InsertGame.Image")));
             this.InsertGame.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.InsertGame.Location = new System.Drawing.Point(798, 28);
+            this.InsertGame.Location = new System.Drawing.Point(775, 16);
             this.InsertGame.Name = "InsertGame";
-            this.InsertGame.Size = new System.Drawing.Size(170, 55);
+            this.InsertGame.Size = new System.Drawing.Size(139, 55);
             this.InsertGame.TabIndex = 41;
-            this.InsertGame.Text = "Send game\r\nto review";
+            this.InsertGame.Text = "Set up Game";
             this.InsertGame.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.InsertGame.UseVisualStyleBackColor = false;
+            this.InsertGame.Click += new System.EventHandler(this.InsertGame_Click);
+            // 
+            // UpdateLinks
+            // 
+            this.UpdateLinks.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.UpdateLinks.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.UpdateLinks.FlatAppearance.BorderColor = System.Drawing.Color.SaddleBrown;
+            this.UpdateLinks.FlatAppearance.BorderSize = 3;
+            this.UpdateLinks.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.UpdateLinks.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.UpdateLinks.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UpdateLinks.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpdateLinks.ForeColor = System.Drawing.Color.White;
+            this.UpdateLinks.Image = ((System.Drawing.Image)(resources.GetObject("UpdateLinks.Image")));
+            this.UpdateLinks.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.UpdateLinks.Location = new System.Drawing.Point(54, 510);
+            this.UpdateLinks.Name = "UpdateLinks";
+            this.UpdateLinks.Size = new System.Drawing.Size(180, 55);
+            this.UpdateLinks.TabIndex = 42;
+            this.UpdateLinks.Text = "Verify and\r\nSync Information";
+            this.UpdateLinks.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.UpdateLinks.UseVisualStyleBackColor = false;
+            this.UpdateLinks.Click += new System.EventHandler(this.UpdateLinks_Click);
+            // 
+            // HTMLEditor
+            // 
+            this.HTMLEditor.IllegalPatterns = new string[] {
+        "<script.*?>",
+        "<\\w+\\s+.*?(j|java|vb|ecma)script:.*?>",
+        "<\\w+(\\s+|\\s+.*?\\s+)on\\w+\\s*=.+?>",
+        "</?input.*?>"};
+            this.HTMLEditor.Location = new System.Drawing.Point(245, 106);
+            this.HTMLEditor.Name = "HTMLEditor";
+            this.HTMLEditor.Padding = new System.Windows.Forms.Padding(1);
+            this.HTMLEditor.Size = new System.Drawing.Size(667, 459);
+            this.HTMLEditor.TabIndex = 43;
+            this.HTMLEditor.Text = "<P style=\"COLOR: red\"><STRONG>Insert your game description here!</STRONG></P>";
             // 
             // HostSelf_GameEditor_Insert
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(980, 576);
-            this.Controls.Add(SetupIndex);
+            this.ClientSize = new System.Drawing.Size(915, 569);
+            this.Controls.Add(this.HTMLEditor);
+            this.Controls.Add(this.UpdateLinks);
             this.Controls.Add(this.InsertGame);
             this.Controls.Add(GameDescriptionLabel);
             this.Controls.Add(this.DeveloperFilter);
@@ -281,7 +270,6 @@ namespace IwPlay.Hosts.Secondary
             this.Controls.Add(GameNameLabel);
             this.Controls.Add(this.GameImageLink);
             this.Controls.Add(GameImageLabel);
-            this.Controls.Add(this.EditorHandler);
             this.Controls.Add(this.CurrentPaymentLinkInput);
             this.Controls.Add(CurrentPaymentLinkLabel);
             this.Controls.Add(this.CheckFreeGame);
@@ -296,8 +284,6 @@ namespace IwPlay.Hosts.Secondary
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "IwPlay - Game Editor";
             this.Load += new System.EventHandler(this.HostSelf_Load);
-            SetupIndex.ResumeLayout(false);
-            SetupIndex.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GameImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -307,7 +293,6 @@ namespace IwPlay.Hosts.Secondary
         #endregion
 
         private System.Windows.Forms.TextBox GameImageLink;
-        private System.Windows.Forms.Panel EditorHandler;
         private System.Windows.Forms.TextBox CurrentPaymentLinkInput;
         private System.Windows.Forms.CheckBox CheckFreeGame;
         private System.Windows.Forms.TextBox CurrentGamePriceInput;
@@ -316,7 +301,7 @@ namespace IwPlay.Hosts.Secondary
         private System.Windows.Forms.TextBox GameNameInput;
         private System.Windows.Forms.ComboBox DeveloperFilter;
         private System.Windows.Forms.Button InsertGame;
-        private System.Windows.Forms.Button SearchFilesButton;
-        private System.Windows.Forms.Label FilesInfo;
+        private System.Windows.Forms.Button UpdateLinks;
+        private DG.MiniHTMLTextBox.MiniHTMLTextBox HTMLEditor;
     }
 }

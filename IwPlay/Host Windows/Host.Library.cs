@@ -36,6 +36,8 @@ namespace IwPlay.Hosts
 
         private void Host_Load(object sender, EventArgs e)
         {
+            // Adquirir todos os jogos da IwPlay
+            GameHandler = new HostSelf[DBCS.Games.Count];
 
             // Iniciar trabalhos do Background Worker
             LibraryWorker.DoWork += LibraryWorker_DoWork;
@@ -51,8 +53,6 @@ namespace IwPlay.Hosts
 
         private void LibraryWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            // Adquirir todos os jogos da IwPlay
-            GameHandler = new HostSelf[DBCS.Games.Count];
             for (int i = 0; i < GameHandler.Length; i++)
             {
                 // Usuário é um dos desenvolvedores do jogo?
@@ -159,11 +159,23 @@ namespace IwPlay.Hosts
             }
 
             // Dispose em todos os game handlers
-            foreach (HostSelf hs in GameHandler) { hs.Dispose(); }
-            GameHandler = null;
+            //foreach (HostSelf hs in GameHandler) { hs.Dispose(); }
+            //GameHandler = null;
 
             // Mudar filtro
-            ApplyFilterIndex = Filter.GetItemText(Filter.SelectedItem) == "ALL GAMES"? null : Filter.GetItemText(Filter.SelectedItem);
+            if(Filter.GetItemText(Filter.SelectedItem) == "ALL GAMES")
+            {
+                // Nenhum filtro selecionado
+                ApplyFilterIndex = null;
+
+                // Forçar atualização de jogos da Store
+                DBCS._Games = null;
+            }
+            else
+            {
+                // Aplicar filtros
+                ApplyFilterIndex = Filter.GetItemText(Filter.SelectedItem);
+            }
 
             // Fazer o background worker trabalhar
             LibraryWorker.RunWorkerAsync();
@@ -179,6 +191,10 @@ namespace IwPlay.Hosts
 
             // Desabilitar visualização do Flow
             Flow.Visible = false;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
         }
     }
 }

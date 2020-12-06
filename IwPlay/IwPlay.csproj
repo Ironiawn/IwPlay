@@ -68,8 +68,11 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="MstHtmlEditor, Version=4.20.6.15, Culture=neutral, PublicKeyToken=8ee81cea60080003, processorArchitecture=MSIL">
-      <HintPath>..\packages\BaiqiSoft.WinFormsHtmlEditor.NET4.20.6.15\lib\MstHtmlEditor.dll</HintPath>
+    <Reference Include="MiniHTMLTextBox, Version=1.0.24910.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DG.MiniHTMLTextBox.1.0.24910.3\lib\net40\MiniHTMLTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="ModelEditControl">
+      <HintPath>ModelTextHtml\ModelEditControl.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=106.11.7.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.11.7\lib\net452\RestSharp.dll</HintPath>
@@ -201,6 +204,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\Encryptor.cs" />
+    <Compile Include="Systems\IwPlay.Cryptor.cs" />
     <Compile Include="Systems\IwPlay.Systems.cs" />
     <EmbeddedResource Include="Enc.resx">
       <DependentUpon>Enc.cs</DependentUpon>
