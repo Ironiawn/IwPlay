@@ -11,6 +11,8 @@ Uses "anti-VM" rules to avoid cheating (really?)
 Sorry, I'm still learning how to create a good read-me, and how to use Github :(
 Also: I'm still learning C# and PHP folks!
 
+- There's an exe using Crypto Obfuscator (I've lost the project of it too)
+
 Bye :P
 
 ps: unfinished and outdated project
